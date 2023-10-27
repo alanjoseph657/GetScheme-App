@@ -12,5 +12,8 @@ class SchemesDB(models.Model):
         ("Insurance","Insurance"),
         ("General","General")
     )
-    Type = models.CharField(max_length=50,null=True,blank=True,choices=options)
+    Type1 = models.CharField(max_length=50,null=True,blank=True,choices=options)
+    Type2 = models.CharField(max_length=50,null=True,blank=True,choices=options)
+    Type3 = models.CharField(max_length=50,null=True,blank=True,choices=options)
     Description = models.CharField(max_length=1000,null=True,blank=True)
+    Link = models.CharField(max_length=1000,null=True,blank=True)

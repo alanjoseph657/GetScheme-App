@@ -1,9 +1,10 @@
-from rest_framework import permissions
+from rest_framework import permissions,authentication
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt import authentication
+# from rest_framework_simplejwt import authentication
+from rest_framework.renderers import TemplateHTMLRenderer
 
 from .models import *
 from .serializers import *
@@ -36,4 +37,11 @@ class ProfileView(ModelViewSet):
     serializer_class = ProfileSerializer
     queryset = ProfileDB.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [authentication.JWTAuthentication]
+    authentication_classes = [authentication.TokenAuthentication]
+
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        profiles = self.get_queryset()
+        data = {'profiles': profiles}
+        return Response(data, template_name='profile_page.html')

@@ -10,6 +10,7 @@ router.register('profile',ProfileView,basename='profiles')
 
 urlpatterns = [
     path('register/',views.register_request.as_view(),name="register"),
+    # path('profile/', ProfileView.as_view({'get':'list'}), name='profile-view'),
 
 
 ] + router.urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
