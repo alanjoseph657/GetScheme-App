@@ -30,6 +30,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             'Reservation',
             'Aadhar_Number',
             'Contact',
-            'Email',
             'Profile_Image'
         )
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)

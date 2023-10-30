@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% extends 'home.html' %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+<div class="text-center">
+    <h1 class="text-center display-4" style="color:blueviolet;">GetScheme App</h1><br>
+    <a class="btn btn-outline-secondary" href="{% url 'pro' %}">Update Profile</a>
+
+</div>
+<br>
+
+<div class="row row-cols-1 row-cols-md-3 g-5 text-center">
+    {% for i in scheme %}
+
+    <div class="col">
+        <div class="card text-center mb-3 shadow p-3 mb-5" style="width: 18rem;">
+            <div class="card-body">
+                <div class="card-title" style="height:80px;overflow:hidden;">
+                    <h5> {{i.Scheme_Name}}</h5>
+                </div>
+                <div class="card-text" style="height:100px;overflow:hidden;">
+                    <p>{{i.Description}}</p>
+                </div>
+                <br>
+                <div>
+                    <a class="btn btn-primary" href="{{i.Link}}">View</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+</body>
+</html>

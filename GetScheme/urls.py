@@ -25,15 +25,18 @@ import AdminUI.urls
 import Scheme.urls
 from . import settings
 from  rest_framework.authtoken import views
+from AdminUI.views import *
+
 
 urlpatterns = [
+    path('', login_page, name='login'),
     path('admin/', admin.site.urls),
     path('AdminUI/', include("AdminUI.urls")),
     path('Scheme/', include(Scheme.urls)),
     path('tauth/',views.obtain_auth_token),
+    # path('api-auth/',include('rest_framework.urls'))
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
-
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

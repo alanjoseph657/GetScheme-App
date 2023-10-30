@@ -9,6 +9,7 @@ class SchemeSerializer(serializers.ModelSerializer):
         model = SchemesDB
         fields = (
             'Scheme_Name',
-            'Type',
+            'Type1',
+
             'Description',
         )
