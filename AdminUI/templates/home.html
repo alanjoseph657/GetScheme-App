@@ -24,16 +24,24 @@
     <!--    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"-->
     <!--          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">-->
 </head>
-<body>
+<body class=" bg-light">
 
-<nav class="navbar shadow p-3 mb-5 bg-body-secondary rounded">
+<nav class="navbar shadow p-3 mb-5">
     <div class="container-fluid">
         <a href="{% url 'h' %}" style="color:black;text-decoration:none;">
             <h2 class="text-center display-5 ">GetScheme</h2>
         </a>
-        <form class="d-flex" role="search">
-            <input aria-label="Search" class="form-control me-2" placeholder="Search" type="search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+        <form class="d-flex" role="search" method="get" action="{% url 'search-api' %}">
+            {% csrf_token %}
+            <select aria-label="Search" class="btn btn-outline-dark dropdown-toggle" name="type">
+                <option value="General">General</option>
+                <option value="Disabilty">Disability</option>
+                <option value="Reservation">Reservation</option>
+                <option value="Profession">Profession</option>
+                <option value="State">State</option>
+                <option value="Insurance">Insurance</option>
+            </select>
+            <button class="btn btn-outline-success" type="submit" style="margin-left:5px;">Search</button>
             <a class="ml-3" href="{% url 'pro' %}" style="color:black; margin-left:20px;">
                 <svg class="bi bi-person-circle" fill="currentColor" height="38" viewBox="0 0 16 16"
                      width="38" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +50,7 @@
                           fill-rule="evenodd"/>
                 </svg>
             </a>
-            <a class="ml-3" href="{% url 'pro' %}" style="color:rgba(220, 3, 3, 0.733); margin-left:20px;">
+            <a class="ml-3" href="{% url 'api_logout' %}" style="color:rgba(220, 3, 3, 0.733); margin-left:20px;">
                 <svg class="bi bi-box-arrow-right" fill="currentColor" height="38" viewBox="0 0 16 16"
                      width="38" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"
@@ -90,7 +98,7 @@
     {% endblock %}
 </div>
 <div class="container">
-    <footer class="py-3 my-4">
+    <footer class="py-3 my-4 ">
 
         <p class="text-center text-muted">© GetScheme App</p>
     </footer>

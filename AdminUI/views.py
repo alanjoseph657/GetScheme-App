@@ -1,35 +1,34 @@
-from rest_framework import permissions,authentication
-from django.shortcuts import render,redirect
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
 from rest_framework import status
+from rest_framework.decorators import api_view
+# from rest_framework_simplejwt import authentication
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-# from rest_framework_simplejwt import authentication
-from rest_framework.renderers import TemplateHTMLRenderer,JSONRenderer
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
-from rest_framework_simplejwt.views import TokenObtainPairView
-from django.contrib.auth import authenticate, login
-from Scheme.models import *
-from Scheme.serializers import *
+from django.views.generic import View
 
-from .models import *
+from AdminUI.forms import NewUserForm
+from Scheme.serializers import *
 from .serializers import *
 
 
-class register_request(APIView):
-    def post(self, req, *args, **kwargs):
-        ser = UserSerializer(data=req.POST)
-        if ser.is_valid():
-            ser.save()
-            token, created = Token.objects.get_or_create(user=req.user)
-
-            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"Msg": ser.errors}, status=status.HTTP_400_BAD_REQUEST)
+# class register_request(APIView):
+#     def post(self, req, *args, **kwargs):
+#         ser = UserSerializer(data=req.POST)
+#         if ser.is_valid():
+#             ser.save()
+#             token, created = Token.objects.get_or_create(user=req.user)
+#
+#             return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response({"Msg": ser.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 def login_page(request):
     return render(request, 'login.html')
+
 
 # class CustomTokenObtainPairView(TokenObtainPairView):
 #     def post(self, request, *args, **kwargs):
@@ -67,15 +66,13 @@ class LoginAPIView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework.decorators import api_view
 
 @api_view(['GET'])
 def home(request):
     data = SchemesDB.objects.all()
     serializer = SchemeSerializer(data, many=True)
-    return render(request,'home.html',{'scheme':serializer.data})
+    return render(request, 'home.html', {'scheme': serializer.data})
 
-from django.shortcuts import get_object_or_404
 
 class ProfileView(ModelViewSet):
     model = ProfileDB
@@ -92,3 +89,41 @@ class ProfileView(ModelViewSet):
         return Response({'user_profile': serialized_profile.data})
 
 
+def register(request):
+    if request.method == 'POST':
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect(login_page)  # Replace 'profile' with the URL name of the user's profile page
+    else:
+        form = NewUserForm()
+    return render(request, "register.html", {'form': form})
+
+
+class LogoutAPIView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect(login_page)
+
+class SearchResult(APIView):
+    def get(self,request,*args, **kwargs):
+        search_query = request.GET.get('type')
+        print(search_query)
+        queryset = SchemesDB.objects.all()
+        queryset = queryset.filter(Type1__contains=search_query) | queryset.filter(Type2__contains=search_query) | queryset.filter(Type3__contains=search_query)
+        print(queryset)
+        serializer = SchemeSerializer(queryset,many=True)
+        return render(request,"searchresult.html",{'scheme': serializer.data})
+
+class profile_edit(ModelViewSet):
+    model = ProfileDB
+    serializer_class = ProfileSerializer
+    queryset = ProfileDB.objects.all()
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'profile_update.html'
+
+    def list(self, request, *args, **kwargs):
+        profile = get_object_or_404(ProfileDB, user=request.user.id)
+        serialized_profile = self.get_serializer(profile)
+        return Response({'user_profile': serialized_profile.data})
