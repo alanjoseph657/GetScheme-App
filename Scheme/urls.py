@@ -1,6 +1,7 @@
 from django.urls import path
-from AdminUI import views
+from .views import *
+
 
 urlpatterns = [
-
+     path('scheme/',SchemeView.as_view(),name='scheme')
 ]
